@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+1. sudo apt-get update
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+2. sudo apt-get install openjdk-8-jdk
 
-## Available Scripts
+3. sudo apt-get install zookeeperd
 
-In the project directory, you can run:
+4. sudo systemctl status zookeeper
 
-### `npm start`
+5. sudo systemctl start zookeeper
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+6. sudo systemctl enable zookeeper
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+sudo apt-get install net-tools
 
-### `npm test`
+sudo netstat -tulpen | grep 2181
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+mkdir Downloads
 
-### `npm run build`
+cd Downloads
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+wget https://dlcdn.apache.org/kafka/3.1.0/kafka_2.12-3.1.0.tgz
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+sudo mkdir /opt/kafka
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+wget https://dlcdn.apache.org/kafka/3.1.0/kafka_2.12-3.1.0.tgz
 
-### `npm run eject`
+sudo mkdir /opt/kafka
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+sudo tar xvzf kafka_2.12-3.1.0.tgz -C /opt/kafka
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+sudo nano /etc/profile
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+export KAFKA_HOME="/opt/kafka/kafka_2.12-3.1.0"
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+export PATH="$PATH:${KAFKA_HOME}/bin"
 
-## Learn More
+tail /etc/profile
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+sudo nano ~/.bashrc
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+alias sudo='sudo env PATH="$PATH"'
 
-### Code Splitting
+sudo reboot
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+echo $KAFKA_HOME
+echo $HOME
 
-### Analyzing the Bundle Size
+sudo ln -s $KAFKA_HOME/config/server.properties /etc/kafka.properties
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+sudo kafka-server-start.sh /etc/kafka.properties
 
-### Making a Progressive Web App
+kafka-topics.sh --create --topic qqb-topic --bootstrap-server localhost:9092
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+-> Producer: 
+kafka-console-producer.sh --topic qqb-topic --bootstrap-server localhost:9092
 
-### Advanced Configuration
+-> Consumer: 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+kafka-console-consumer.sh --topic qqb-topic --from-beginning --bootstrap-server localhost:9092
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
